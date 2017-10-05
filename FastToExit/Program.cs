@@ -2,6 +2,7 @@
 
 namespace FastToExit
 {
+    // Project started 171005
     enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = ' ' };
 
 
