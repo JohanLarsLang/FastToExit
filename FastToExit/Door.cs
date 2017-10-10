@@ -4,12 +4,12 @@ using System.Text;
 
 namespace FastToExit
 {
-    public class Wall : Square
+    public class Door : Square
     {
 
         public override char Print()
         {
-            return '#';
+            return 'D';
         }
 
         public new bool visable()
@@ -18,4 +18,3 @@ namespace FastToExit
         }
     }
 }
-

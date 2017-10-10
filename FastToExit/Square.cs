@@ -6,17 +6,11 @@ namespace FastToExit
 {
     public abstract class Square : Isignable
     {
-        /*
-        public int Xpos { get; set; }
-        public int Ypos { get; set; }
-
-        public Square(int xpos, int ypos)
+        public virtual char Print()
         {
-            Xpos = xpos;
-            Ypos = ypos;
-        }
+            return ' ';
 
-    */
+        }
 
         public bool visable()
         {

@@ -1,11 +1,10 @@
 ﻿using System;
 
+//Lab 4 by Johan Lång och Anders Eriksson,  Göteborg 171010
+
 namespace FastToExit
 {
-    // Project started 171005
-    // Testing new branch
-    enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = ' ' };
-
+    enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', Key = 'k' };
 
     class Program
     {
@@ -14,13 +13,18 @@ namespace FastToExit
 
             const int ROWS = 16, COLUMNS = 24;
 
-            char[,] map = new char[COLUMNS, ROWS];
-            int playerRow = 3, playerColumn = 11;
+            Square[,] map = new Square[ROWS, COLUMNS];
 
-            Wall wall = new Wall();
-            char w = wall.PrintWall();
+            int playerRow = 3, playerColumn = 5;
+
+            #region Skapa kartan
 
             //Skapa kartan
+
+            Player.Steps = 0;
+            Player.Score = 10000;
+            string message = "";
+
             for (int row = 0; row < ROWS; row++)
             {
                 for (int column = 0; column < COLUMNS; column++)
@@ -28,90 +32,454 @@ namespace FastToExit
                     //Obs använd oject istället i lab 4
 
                     if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1)
-                        //map[column, row] = '#';
-                        map[column, row] = w;
+                        map[row, column] = new Wall();
 
+                    else if (row == 3 && column == 13 || row == 4 && column == 13)
+                        map[row, column] = new Door();
 
-                    //map[column, row] = Wall.   '#';
+                    else if (row == 4 && column == 7)
+                        map[row, column] = new DoorKey();
 
-                    //else if (row == playerRow && column == playerColumn)
-                    //  map[column, row] = '@';
+                    else if (row == 1 && column == 20)
+                        map[row, column] = new Exit();
+
+                    else if (row == 1 && column == 7)
+                        map[row, column] = new Monster();
+
+                    else if (row == 10 && column == 2)
+                        map[row, column] = new Sword();
+
+                    else if (row == 3 && column >= 7)
+                        map[row, column] = new Wall();
+
                     else
 
-                        map[column, row] = '-';
+                        map[row, column] = new Room();
                 }
+
             }
 
+            #endregion
+
+            #region Rita kartan
+            //Rita ut kartan
             while (true)
             {
                 Console.Clear();
+
+                Console.WriteLine($"**************** The Fast To Exit Game ******************");
+                Console.WriteLine();
+
+
                 string buffer = "";
 
-                //Rita ut kartan
+
                 for (int row = 0; row < ROWS; row++)
                 {
                     string line = "";
+
                     for (int column = 0; column < COLUMNS; column++)
                     {
                         if (row == playerRow && column == playerColumn)
-                            //map[column, row] = '@';
+                            //map[row, column] = '@';
                             line += '@';
 
 
                         else
-                            line += map[column, row];
-                        //Console.Write(map[column, row]);
+                            line += map[row, column].Print();
+                        //Console.Write(map[row, column]);
                     }
                     //Console.WriteLine(line);
                     buffer += line + "\n";
+
                 }
 
-                Console.CursorLeft = 0;
-                Console.CursorTop = 0;
+
                 Console.Write(buffer);
+
+                Console.SetCursorPosition(0, 2); //0 är left och 2 är top 
+                Console.SetCursorPosition(0, Console.WindowHeight - 10);
+                Console.WriteLine($"Use Key: S - Left, W - Up, D - Right, S - Down");
+                Console.WriteLine();
+
+                Console.WriteLine($"Steps: {Player.Steps}, Position(Row, Column): {playerRow}, {playerColumn}, Key: {Player.DoorKey}, Sword: {Player.Sword}, Score: {Player.Score}");
+                Console.WriteLine($"Message: {message}");
+
+                #endregion
 
                 var key = Console.ReadKey();
 
+                #region uppåt
                 //Uppåt
                 if (key.Key == ConsoleKey.W)
                 {
-                    if (playerRow == 1)
-                        playerRow = 1;
+                    message = "";
+
+                    if (map[playerRow - 1, playerColumn] is Wall)
+                    { }
+
+                    else if (map[playerRow - 1, playerColumn] is DoorKey)
+                    {
+                        message = ("You pick up a key!");
+                        Player.DoorKey = true;
+                        playerRow--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow - 1, playerColumn] is Sword)
+                    {
+                        message = ("You pick up a sword!");
+                        Player.Sword = true;
+                        playerRow--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow - 1, playerColumn] is Door)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to open the door!");
+                        }
+
+                        else
+                        {
+                            message = ("You passed a door!");
+                            playerRow--;
+                            Player.Steps++;
+                            Player.DoorKey = false;
+                            Player.Score -= 100;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+                    }
+
+                    else if (map[playerRow - 1, playerColumn] is Monster)
+                    {
+                        if (Player.Sword == false)
+                        {
+                            message = ("You need a sword to kill the monster!");
+                            Player.Score -= 1000;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = ("You succeded to kill the monster!");
+                            playerRow--;
+                            Player.Steps++;
+                            Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[playerRow - 1, playerColumn] is Exit)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to go to Exit");
+                        }
+
+                        else
+                        {
+                            playerRow--;
+                            Player.Steps++;
+                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                        }
+                    }
 
                     else
+                    {
                         playerRow--;
+                        Player.Steps++;
+                        Player.Score -= 100;
+                        if (Player.Score == 0)
+                            Player.Score = 0;
+                    }
                 }
+                #endregion
 
+                #region Nedåt
                 //Nedåt
                 if (key.Key == ConsoleKey.S)
                 {
-                    if (playerRow == ROWS - 2)
-                        playerRow = ROWS - 2;
+                    message = "";
+
+                    if (map[playerRow + 1, playerColumn] is Wall)
+                    { }
+
+                    else if (map[playerRow + 1, playerColumn] is DoorKey)
+                    {
+                        message = ("You pick up a key!");
+                        Player.DoorKey = true;
+                        playerRow++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow + 1, playerColumn] is Sword)
+                    {
+                        message = ("You pick up a sword!");
+                        Player.Sword = true;
+                        playerRow++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow + 1, playerColumn] is Door)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to open the door!");
+                        }
+
+                        else
+                        {
+                            message = ("You passed a door!");
+                            playerRow++;
+                            Player.Steps++;
+                            Player.DoorKey = false;
+                            Player.Score -= 100;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+                    }
+
+                    else if (map[playerRow + 1, playerColumn] is Monster)
+                    {
+                        if (Player.Sword == false)
+                        {
+                            message = ("You need a sword to kill the monster!");
+                            Player.Score -= 1000;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = ("You succeded to kill the monster!");
+                            playerRow++;
+                            Player.Steps++;
+                            Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[playerRow + 1, playerColumn] is Exit)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to go to Exit");
+                        }
+
+                        else
+                        {
+                            playerRow++;
+                            Player.Steps++;
+                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                        }
+                    }
 
                     else
+                    {
                         playerRow++;
+                        Player.Steps++;
+                        Player.Score -= 100;
+                        if (Player.Score == 0)
+                            Player.Score = 0;
+                    }
                 }
+
+                #endregion
+
+                #region vänster
 
                 // Vänster
                 else if (key.Key == ConsoleKey.A)
                 {
-                    if (playerColumn == 1)
-                        playerColumn = 1;
+                    message = "";
+
+                    if (map[playerRow, playerColumn - 1] is Wall)
+                    { }
+
+                    else if (map[playerRow, playerColumn - 1] is DoorKey)
+                    {
+                        message = ("You pick up a key!");
+                        Player.DoorKey = true;
+                        playerColumn--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow, playerColumn - 1] is Sword)
+                    {
+                        message = ("You pick up a sword!");
+                        Player.Sword = true;
+                        playerColumn--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow, playerColumn - 1] is Door)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to open the door!");
+                        }
+
+                        else
+                        {
+                            message = ("You passed a door!");
+                            playerColumn--;
+                            Player.Steps++;
+                            Player.DoorKey = false;
+                            Player.Score -= 100;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+                    }
+
+                    else if (map[playerRow, playerColumn - 1] is Monster)
+                    {
+                        if (Player.Sword == false)
+                        {
+                            message = ("You need a sword to kill the monster!");
+                            Player.Score -= 1000;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = ("You succeded to kill the monster!");
+                            playerColumn--;
+                            Player.Steps++;
+                            Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[playerRow, playerColumn - 1] is Exit)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to go to Exit");
+                        }
+
+                        else
+                        {
+                            playerColumn--;
+                            Player.Steps++;
+                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                        }
+                    }
 
                     else
+                    {
                         playerColumn--;
+                        Player.Steps++;
+                        Player.Score -= 100;
+                        if (Player.Score == 0)
+                            Player.Score = 0;
+                    }
                 }
+                #endregion
 
+                #region Höger
                 // Höger
                 else if (key.Key == ConsoleKey.D)
                 {
-                    if (playerColumn == COLUMNS - 2)
-                        playerColumn = COLUMNS - 2;
+                    message = "";
+
+                    if (map[playerRow, playerColumn + 1] is Wall)
+                    { }
+
+                    else if (map[playerRow, playerColumn + 1] is DoorKey)
+                    {
+                        message = ("You pick up a key!");
+                        Player.DoorKey = true;
+                        playerColumn++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow, playerColumn + 1] is Sword)
+                    {
+                        message = ("You pick up a sword!");
+                        Player.Sword = true;
+                        playerColumn++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[playerRow, playerColumn + 1] is Door)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to open the door!");
+                        }
+
+                        else
+                        {
+                            message = ("You passed a door!");
+                            playerColumn++;
+                            Player.Steps++;
+                            Player.DoorKey = false;
+                            Player.Score -= 100;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+                    }
+
+                    else if (map[playerRow, playerColumn + 1] is Monster)
+                    {
+                        if (Player.Sword == false)
+                        {
+                            message = ("You need a sword to kill the monster!");
+                            Player.Score -= 1000;
+                            if (Player.Score == 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = ("You succeded to kill the monster!");
+                            playerColumn++;
+                            Player.Steps++;
+                            Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[playerRow, playerColumn + 1] is Exit)
+                    {
+                        if (Player.DoorKey == false)
+                        {
+                            message = ("You need a key to go to Exit");
+                        }
+
+                        else
+                        {
+                            playerColumn++;
+                            Player.Steps++;
+                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                        }
+                    }
 
                     else
+                    {
                         playerColumn++;
+                        Player.Steps++;
+                        Player.Score -= 100;
+                        if (Player.Score == 0)
+                            Player.Score = 0;
+                    }
                 }
+                #endregion
             }
         }
+
     }
 }
