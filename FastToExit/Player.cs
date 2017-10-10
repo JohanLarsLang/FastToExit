@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FastToExit
 {
-    public class Player
+    public class Player : Square
     {
         public int Xpos { get; set; }
         public int Ypos { get; set; }
@@ -23,6 +23,19 @@ namespace FastToExit
             DoorKey = doorKey;
             Score = score;
             Steps = steps;
+
+        }
+
+        public Player(int xpos, int ypos)
+        {
+            Sign = SquareType.Player;
+
+            Xpos = xpos;
+            Ypos = ypos;
+        }
+
+        public void MovePlayer()
+        {
 
         }
 
