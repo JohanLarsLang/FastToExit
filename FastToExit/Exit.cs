@@ -11,14 +11,14 @@ namespace FastToExit
             Sign = SquareType.Exit;
         }
 
-        public static new string Message(bool b)
+        public new static string Message(bool b)
         {
             string message = "";
 
             if (b == true)
-                message = "Congratulation! You suuced to go to the Exit!";
+                message = "Congratulations! You succeeded to go to the Exit!";
             else
-                message = "You need a key to go to Exit!";
+                message = "You need a key to go to the Exit!";
 
             return message;
         }

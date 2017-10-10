@@ -15,7 +15,7 @@ namespace FastToExit
 
             Square[,] map = new Square[ROWS, COLUMNS];
 
-            int playerRow = 3, playerColumn = 5;
+            int playerRow = 14, playerColumn = 5;
 
             #region Skapa kartan
 
@@ -29,12 +29,11 @@ namespace FastToExit
             {
                 for (int column = 0; column < COLUMNS; column++)
                 {
-                    //Obs använd oject istället i lab 4
-
+                    // Spelplan
                     if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1)
                         map[row, column] = new Wall();
 
-                    else if (row == 3 && column == 13 || row == 4 && column == 13)
+                    else if (row == 3 && column == 13 || row == 8 && column == 13)
                         map[row, column] = new Door();
 
                     else if (row == 4 && column == 7)
@@ -43,13 +42,13 @@ namespace FastToExit
                     else if (row == 1 && column == 20)
                         map[row, column] = new Exit();
 
-                    else if (row == 1 && column == 7)
+                    else if (row == 1 && column == 7 || row == 8 && column == 21)
                         map[row, column] = new Monster();
 
-                    else if (row == 10 && column == 2)
+                    else if (row == 10 && column == 2 || row == 8 && column == 22)
                         map[row, column] = new Sword();
 
-                    else if (row == 3 && column >= 7)
+                    else if (row == 3 && column >= 2 || row == 8 && column <= 20 || row == 12 && column >= 12)
                         map[row, column] = new Wall();
 
                     else
@@ -65,10 +64,10 @@ namespace FastToExit
             //Rita ut kartan
             while (true)
             {
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
                 Console.Clear();
-
-                Console.WriteLine($"**************** The Fast To Exit Game ******************");
-                Console.WriteLine();
+                Console.WriteLine($"The Fast To Exit Game");
 
 
                 string buffer = "";
@@ -96,10 +95,12 @@ namespace FastToExit
 
 
                 Console.Write(buffer);
-
-                Console.SetCursorPosition(0, 2); //0 är left och 2 är top 
-                Console.SetCursorPosition(0, Console.WindowHeight - 10);
-                Console.WriteLine($"Use Key: S - Left, W - Up, D - Right, S - Down");
+                Console.WriteLine();
+                Console.WriteLine("Use these keys to navigate:");
+                Console.WriteLine();
+                Console.WriteLine($"\tw - Up");
+                Console.WriteLine("a - Left\td - Right");
+                Console.WriteLine("\ts - Down");
                 Console.WriteLine();
 
                 Console.WriteLine($"Position(Row, Column): {playerRow}, {playerColumn}");

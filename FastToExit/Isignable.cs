@@ -4,9 +4,9 @@ using System.Text;
 
 namespace FastToExit
 {
-    public interface Isignable
+    public interface ISignable
     {
-        bool Visable();
+        bool Visible();
         string Message(bool b);
     }
 }

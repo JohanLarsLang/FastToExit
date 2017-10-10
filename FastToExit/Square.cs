@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FastToExit
 {
-    public abstract class Square : Isignable
+    public abstract class Square : ISignable
     {
         public SquareType Sign { get; set; }
 
@@ -20,7 +20,7 @@ namespace FastToExit
         }
      
 
-        public bool Visable()
+        public bool Visible()
         {
             return true;
         }
