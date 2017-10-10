@@ -4,10 +4,11 @@
 
 namespace FastToExit
 {
-    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', Sword = 's' };
+    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', SuperKey = 'k', Sword = 's' };
 
     class Program
     {
+
         static void Main(string[] args)
         {
 
@@ -24,28 +25,34 @@ namespace FastToExit
             Player.Steps = 0;
             Player.Score = 10000;
             string message = "";
+            string messageE = "";
+            string command = "";
+            Player.Exit = false;
 
             for (int row = 0; row < ROWS; row++)
             {
                 for (int column = 0; column < COLUMNS; column++)
                 {
                     // Spelplan
-                    if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1)
+                    if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1 || row == 12 && column > 18 || row == 2 && column == 18)
                         map[row, column] = new Wall();
 
-                    else if (row == 3 && column == 13 || row == 8 && column == 13)
+                    else if (row == 3 && column == 13 || row == 8 && column == 13 || row == 1 && column == 19 || row == 13 && column == 22)
                         map[row, column] = new Door();
 
-                    else if (row == 4 && column == 7)
+                    else if (row == 4 && column == 7 || row == 10 && column == 2)
                         map[row, column] = new DoorKey();
+
+                    else if (row == 14 && column == 22)
+                        map[row, column] = new SuperKey();
 
                     else if (row == 1 && column == 20)
                         map[row, column] = new Exit();
 
-                    else if (row == 1 && column == 7 || row == 8 && column == 21)
+                    else if (row == 1 && column == 18 || row == 8 && column == 21 || row == 14 && column == 20)
                         map[row, column] = new Monster();
 
-                    else if (row == 10 && column == 2 || row == 8 && column == 22)
+                    else if (row == 8 && column == 22)
                         map[row, column] = new Sword();
 
                     else if (row == 3 && column >= 2 || row == 8 && column <= 20 || row == 12 && column >= 12)
@@ -69,9 +76,7 @@ namespace FastToExit
                 Console.Clear();
                 Console.WriteLine($"The Fast To Exit Game");
 
-
                 string buffer = "";
-
 
                 for (int row = 0; row < ROWS; row++)
                 {
@@ -100,18 +105,20 @@ namespace FastToExit
 
 
                 Console.Write(buffer);
-                Console.WriteLine();
+                // Console.WriteLine();
                 Console.WriteLine("Use these keys to navigate:");
                 Console.WriteLine();
                 Console.WriteLine($"\tw - Up");
                 Console.WriteLine("a - Left\td - Right");
-                Console.WriteLine("\ts - Down");
-                Console.WriteLine();
+                Console.WriteLine("\ts - Down\n");
+                Console.WriteLine("q - Quit the game, p - play again (after enter Exit)\n");
 
                 Console.WriteLine($"Position(Row, Column): {player.Xpos}, {player.Ypos}");
 
-                Console.WriteLine($"Steps: {Player.Steps}, Key: {Player.DoorKey}, Sword: {Player.Sword}, Score: {Player.Score}");
+                Console.WriteLine($"Steps: {Player.Steps}, Key: {Player.DoorKey}, , SuperKey: {Player.SuperKey}, Sword: {Player.Sword}, Score: {Player.Score}");
                 Console.WriteLine($"Message: {message}");
+                Console.WriteLine($"Message: {messageE}");
+                Console.Write($"Command: {command}");
 
                 #endregion
 
@@ -130,6 +137,15 @@ namespace FastToExit
                     {
                         message = DoorKey.Message(true);
                         Player.DoorKey = true;
+                        player.Xpos--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos - 1, player.Ypos] is SuperKey)
+                    {
+                        message = SuperKey.Message(true);
+                        Player.SuperKey = true;
                         player.Xpos--;
                         Player.Score += 1000;
                         Player.Steps++;
@@ -185,7 +201,7 @@ namespace FastToExit
 
                     else if (map[player.Xpos - 1, player.Ypos] is Exit)
                     {
-                        if (Player.DoorKey == false)
+                        if (Player.SuperKey == false)
                         {
                             message = Exit.Message(false);
                         }
@@ -194,8 +210,10 @@ namespace FastToExit
                         {
                             player.Xpos--;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
-                            Player.DoorKey = false;
+                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            messageE = "Type: q  to quit or type: p  to play again";
+                            Player.Exit = true;
+                            Player.SuperKey = false;
                         }
                     }
 
@@ -223,6 +241,15 @@ namespace FastToExit
                     {
                         message = DoorKey.Message(true);
                         Player.DoorKey = true;
+                        player.Xpos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos + 1, player.Ypos] is SuperKey)
+                    {
+                        message = SuperKey.Message(true);
+                        Player.SuperKey = true;
                         player.Xpos++;
                         Player.Score += 1000;
                         Player.Steps++;
@@ -278,7 +305,7 @@ namespace FastToExit
 
                     else if (map[player.Xpos + 1, player.Ypos] is Exit)
                     {
-                        if (Player.DoorKey == false)
+                        if (Player.SuperKey == false)
                         {
                             message = Exit.Message(false);
                         }
@@ -287,8 +314,10 @@ namespace FastToExit
                         {
                             player.Xpos++;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
-                            Player.DoorKey = false;
+                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            Player.SuperKey = false;
+                            Player.Exit = true;
+                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -318,6 +347,15 @@ namespace FastToExit
                     {
                         message = DoorKey.Message(true);
                         Player.DoorKey = true;
+                        player.Ypos--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos, player.Ypos - 1] is SuperKey)
+                    {
+                        message = SuperKey.Message(true);
+                        Player.SuperKey = true;
                         player.Ypos--;
                         Player.Score += 1000;
                         Player.Steps++;
@@ -373,7 +411,7 @@ namespace FastToExit
 
                     else if (map[player.Xpos, player.Ypos - 1] is Exit)
                     {
-                        if (Player.DoorKey == false)
+                        if (Player.SuperKey == false)
                         {
                             message = Exit.Message(false);
                         }
@@ -382,8 +420,10 @@ namespace FastToExit
                         {
                             player.Ypos--;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
-                            Player.DoorKey = false;
+                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            Player.SuperKey = false;
+                            Player.Exit = true;
+                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -411,6 +451,15 @@ namespace FastToExit
                     {
                         message = DoorKey.Message(true);
                         Player.DoorKey = true;
+                        player.Ypos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos, player.Ypos + 1] is SuperKey)
+                    {
+                        message = SuperKey.Message(true);
+                        Player.SuperKey = true;
                         player.Ypos++;
                         Player.Score += 1000;
                         Player.Steps++;
@@ -466,7 +515,7 @@ namespace FastToExit
 
                     else if (map[player.Xpos, player.Ypos + 1] is Exit)
                     {
-                        if (Player.DoorKey == false)
+                        if (Player.SuperKey == false)
                         {
                             message = Exit.Message(false);
                         }
@@ -475,8 +524,10 @@ namespace FastToExit
                         {
                             player.Ypos++;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
-                            Player.DoorKey = false;
+                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            Player.SuperKey = false;
+                            Player.Exit = true;
+                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -490,7 +541,56 @@ namespace FastToExit
                     }
                 }
                 #endregion
+
+                #region Quit
+                //Quit
+                else if (key.Key == ConsoleKey.Q)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Welcome to play again! \n Thank you! \n");
+                    Console.WriteLine();
+                    Console.WriteLine("Are you sure you want to quit the game?");
+                    Console.Write("Select Y or y to quit the game or any key to continue: ");
+
+                    string quitSelection = Console.ReadLine();
+
+                    if (quitSelection == "Y" || quitSelection == "y")
+                        return;
+
+                    else
+                    {
+                        Console.Clear();
+                        continue;
+                    }
+                }
+                #endregion
+
+                #region Play again
+
+                else if (key.Key == ConsoleKey.P)
+                {
+                    if (Player.Exit == true)
+                    {
+                        Console.Clear();
+                        message = "";
+                        messageE = "";
+                        command = "";
+                        Player.Score = 0;
+                        Player.Steps = 0;
+
+                        player.Xpos = 14;
+                        player.Ypos = 5;
+
+                    }
+                    else
+                    {
+                        message = "";
+                        messageE = "You need to success to go to Exit before play again";
+
+                    }
+                }
             }
+            #endregion
         }
 
     }

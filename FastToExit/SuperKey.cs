@@ -4,11 +4,12 @@ using System.Text;
 
 namespace FastToExit
 {
-    public class Exit : Square
+    public class SuperKey : Square
     {
-        public Exit()
+
+        public SuperKey()
         {
-            Sign = SquareType.Exit;
+            Sign = SquareType.SuperKey;
         }
 
         public new static string Message(bool b)
@@ -16,11 +17,14 @@ namespace FastToExit
             string message = "";
 
             if (b == true)
-                message = "Congratulations! You succeeded to go to the Exit!";
-            else
-                message = "You need a super key to go to the Exit!";
+                message = "You pick up a super key!";
 
             return message;
+        }
+
+        public new bool Visible()
+        {
+            return true;
         }
 
     }
