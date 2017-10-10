@@ -26,9 +26,5 @@ namespace FastToExit
 
         }
 
-        public string Print()
-        {
-            return "" + '@';
-        }
     }
 }

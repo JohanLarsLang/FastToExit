@@ -6,13 +6,19 @@ namespace FastToExit
 {
     public class Wall : Square
     {
-
-        public override char Print()
+        public Wall()
         {
-            return '#';
+            Sign = SquareType.Wall;
         }
 
-        public new bool visable()
+        public static new string Message(bool b)
+        {
+            string message = "";
+
+            return message;
+        }
+
+        public new bool Visable()
         {
             return true;
         }

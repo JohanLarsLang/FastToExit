@@ -6,10 +6,22 @@ namespace FastToExit
 {
     public class Exit : Square
     {
-
-        public override char Print()
+        public Exit()
         {
-            return 'E';
+            Sign = SquareType.Exit;
         }
+
+        public static new string Message(bool b)
+        {
+            string message = "";
+
+            if (b == true)
+                message = "Congratulation! You suuced to go to the Exit!";
+            else
+                message = "You need a key to go to Exit!";
+
+            return message;
+        }
+
     }
 }

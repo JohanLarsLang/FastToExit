@@ -6,7 +6,7 @@ namespace FastToExit
 {
     public interface Isignable
     {
-        bool visable();
-
+        bool Visable();
+        string Message(bool b);
     }
 }

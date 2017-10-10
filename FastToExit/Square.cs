@@ -6,13 +6,21 @@ namespace FastToExit
 {
     public abstract class Square : Isignable
     {
-        public virtual char Print()
+        public SquareType Sign { get; set; }
+
+        public char Print()
         {
-            return ' ';
+            return (char)Sign;
 
         }
 
-        public bool visable()
+        public string Message(bool b)
+        {
+            return "";
+        }
+     
+
+        public bool Visable()
         {
             return true;
         }

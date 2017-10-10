@@ -7,12 +7,17 @@ namespace FastToExit
     public class Room : Square
     {
 
-        public override char Print()
+        public Room()
         {
-            return '-';
+            Sign = SquareType.Empty;
         }
 
-        public new bool visable()
+        public static new string Message(bool b)
+        {
+            return "";
+        }
+
+        public new bool Visable()
         {
             return true;
         }

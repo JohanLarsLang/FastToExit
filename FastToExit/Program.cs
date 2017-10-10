@@ -4,7 +4,7 @@
 
 namespace FastToExit
 {
-    enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', Key = 'k' };
+    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', Sword = 's' };
 
     class Program
     {
@@ -102,7 +102,9 @@ namespace FastToExit
                 Console.WriteLine($"Use Key: S - Left, W - Up, D - Right, S - Down");
                 Console.WriteLine();
 
-                Console.WriteLine($"Steps: {Player.Steps}, Position(Row, Column): {playerRow}, {playerColumn}, Key: {Player.DoorKey}, Sword: {Player.Sword}, Score: {Player.Score}");
+                Console.WriteLine($"Position(Row, Column): {playerRow}, {playerColumn}");
+
+                Console.WriteLine($"Steps: {Player.Steps}, Key: {Player.DoorKey}, Sword: {Player.Sword}, Score: {Player.Score}");
                 Console.WriteLine($"Message: {message}");
 
                 #endregion
@@ -120,7 +122,7 @@ namespace FastToExit
 
                     else if (map[playerRow - 1, playerColumn] is DoorKey)
                     {
-                        message = ("You pick up a key!");
+                        message = DoorKey.Message(true);
                         Player.DoorKey = true;
                         playerRow--;
                         Player.Score += 1000;
@@ -129,7 +131,7 @@ namespace FastToExit
 
                     else if (map[playerRow - 1, playerColumn] is Sword)
                     {
-                        message = ("You pick up a sword!");
+                        message = Sword.Message(true);
                         Player.Sword = true;
                         playerRow--;
                         Player.Score += 1000;
@@ -140,17 +142,17 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to open the door!");
+                            message = Door.Message(false);
                         }
 
                         else
                         {
-                            message = ("You passed a door!");
+                            message = Door.Message(true);
                             playerRow--;
                             Player.Steps++;
                             Player.DoorKey = false;
                             Player.Score -= 100;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
                     }
@@ -159,15 +161,15 @@ namespace FastToExit
                     {
                         if (Player.Sword == false)
                         {
-                            message = ("You need a sword to kill the monster!");
+                            message = Monster.Message(false);
                             Player.Score -= 1000;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
 
                         else
                         {
-                            message = ("You succeded to kill the monster!");
+                            message = Monster.Message(true);
                             playerRow--;
                             Player.Steps++;
                             Player.Sword = false;
@@ -179,14 +181,15 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to go to Exit");
+                            message = Exit.Message(false);
                         }
 
                         else
                         {
                             playerRow--;
                             Player.Steps++;
-                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
+                            Player.DoorKey = false;
                         }
                     }
 
@@ -195,7 +198,7 @@ namespace FastToExit
                         playerRow--;
                         Player.Steps++;
                         Player.Score -= 100;
-                        if (Player.Score == 0)
+                        if (Player.Score < 0)
                             Player.Score = 0;
                     }
                 }
@@ -212,7 +215,7 @@ namespace FastToExit
 
                     else if (map[playerRow + 1, playerColumn] is DoorKey)
                     {
-                        message = ("You pick up a key!");
+                        message = DoorKey.Message(true);
                         Player.DoorKey = true;
                         playerRow++;
                         Player.Score += 1000;
@@ -221,7 +224,7 @@ namespace FastToExit
 
                     else if (map[playerRow + 1, playerColumn] is Sword)
                     {
-                        message = ("You pick up a sword!");
+                        message = Sword.Message(true);
                         Player.Sword = true;
                         playerRow++;
                         Player.Score += 1000;
@@ -232,17 +235,17 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to open the door!");
+                            message = Door.Message(false);
                         }
 
                         else
                         {
-                            message = ("You passed a door!");
+                            message = Door.Message(true);
                             playerRow++;
                             Player.Steps++;
                             Player.DoorKey = false;
                             Player.Score -= 100;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
                     }
@@ -251,15 +254,15 @@ namespace FastToExit
                     {
                         if (Player.Sword == false)
                         {
-                            message = ("You need a sword to kill the monster!");
+                            message = Monster.Message(false);
                             Player.Score -= 1000;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
 
                         else
                         {
-                            message = ("You succeded to kill the monster!");
+                            message = Monster.Message(true);
                             playerRow++;
                             Player.Steps++;
                             Player.Sword = false;
@@ -271,14 +274,15 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to go to Exit");
+                            message = Exit.Message(false);
                         }
 
                         else
                         {
                             playerRow++;
                             Player.Steps++;
-                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
+                            Player.DoorKey = false;
                         }
                     }
 
@@ -287,7 +291,7 @@ namespace FastToExit
                         playerRow++;
                         Player.Steps++;
                         Player.Score -= 100;
-                        if (Player.Score == 0)
+                        if (Player.Score < 0)
                             Player.Score = 0;
                     }
                 }
@@ -306,7 +310,7 @@ namespace FastToExit
 
                     else if (map[playerRow, playerColumn - 1] is DoorKey)
                     {
-                        message = ("You pick up a key!");
+                        message = DoorKey.Message(true);
                         Player.DoorKey = true;
                         playerColumn--;
                         Player.Score += 1000;
@@ -315,7 +319,7 @@ namespace FastToExit
 
                     else if (map[playerRow, playerColumn - 1] is Sword)
                     {
-                        message = ("You pick up a sword!");
+                        message = Sword.Message(true);
                         Player.Sword = true;
                         playerColumn--;
                         Player.Score += 1000;
@@ -326,17 +330,17 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to open the door!");
+                            message = Door.Message(false);
                         }
 
                         else
                         {
-                            message = ("You passed a door!");
+                            message = Door.Message(true);
                             playerColumn--;
                             Player.Steps++;
                             Player.DoorKey = false;
                             Player.Score -= 100;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
                     }
@@ -345,15 +349,15 @@ namespace FastToExit
                     {
                         if (Player.Sword == false)
                         {
-                            message = ("You need a sword to kill the monster!");
+                            message = Monster.Message(false);
                             Player.Score -= 1000;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
 
                         else
                         {
-                            message = ("You succeded to kill the monster!");
+                            message = Monster.Message(true);
                             playerColumn--;
                             Player.Steps++;
                             Player.Sword = false;
@@ -365,14 +369,15 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to go to Exit");
+                            message = Exit.Message(false);
                         }
 
                         else
                         {
                             playerColumn--;
                             Player.Steps++;
-                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
+                            Player.DoorKey = false;
                         }
                     }
 
@@ -381,7 +386,7 @@ namespace FastToExit
                         playerColumn--;
                         Player.Steps++;
                         Player.Score -= 100;
-                        if (Player.Score == 0)
+                        if (Player.Score < 0)
                             Player.Score = 0;
                     }
                 }
@@ -398,7 +403,7 @@ namespace FastToExit
 
                     else if (map[playerRow, playerColumn + 1] is DoorKey)
                     {
-                        message = ("You pick up a key!");
+                        message = DoorKey.Message(true);
                         Player.DoorKey = true;
                         playerColumn++;
                         Player.Score += 1000;
@@ -407,7 +412,7 @@ namespace FastToExit
 
                     else if (map[playerRow, playerColumn + 1] is Sword)
                     {
-                        message = ("You pick up a sword!");
+                        message = Sword.Message(true);
                         Player.Sword = true;
                         playerColumn++;
                         Player.Score += 1000;
@@ -418,17 +423,17 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to open the door!");
+                            message = Door.Message(false);
                         }
 
                         else
                         {
-                            message = ("You passed a door!");
+                            message = Door.Message(true);
                             playerColumn++;
                             Player.Steps++;
                             Player.DoorKey = false;
                             Player.Score -= 100;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
                     }
@@ -437,15 +442,15 @@ namespace FastToExit
                     {
                         if (Player.Sword == false)
                         {
-                            message = ("You need a sword to kill the monster!");
+                            message = Monster.Message(false);
                             Player.Score -= 1000;
-                            if (Player.Score == 0)
+                            if (Player.Score < 0)
                                 Player.Score = 0;
                         }
 
                         else
                         {
-                            message = ("You succeded to kill the monster!");
+                            message = Monster.Message(true);
                             playerColumn++;
                             Player.Steps++;
                             Player.Sword = false;
@@ -457,14 +462,15 @@ namespace FastToExit
                     {
                         if (Player.DoorKey == false)
                         {
-                            message = ("You need a key to go to Exit");
+                            message = Exit.Message(false);
                         }
 
                         else
                         {
                             playerColumn++;
                             Player.Steps++;
-                            message = ($"Congratulation! You got to the exit by {Player.Steps} steps and got {Player.Score} points!");
+                            message = $"{Exit.Message(true)}  by { Player.Steps} steps and you got {Player.Score} points!";
+                            Player.DoorKey = false;
                         }
                     }
 
@@ -473,7 +479,7 @@ namespace FastToExit
                         playerColumn++;
                         Player.Steps++;
                         Player.Score -= 100;
-                        if (Player.Score == 0)
+                        if (Player.Score < 0)
                             Player.Score = 0;
                     }
                 }
