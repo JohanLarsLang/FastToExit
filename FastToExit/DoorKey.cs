@@ -12,7 +12,7 @@ namespace FastToExit
             Sign = SquareType.DoorKey;
         }
 
-        public static new string Message(bool b)
+        public new static string Message(bool b)
         {
             string message = "";
 
@@ -22,7 +22,7 @@ namespace FastToExit
             return message;
         }
 
-        public new bool Visable()
+        public new bool Visible()
         {
             return true;
         }
