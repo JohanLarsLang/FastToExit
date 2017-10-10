@@ -3,6 +3,7 @@
 namespace FastToExit
 {
     // Project started 171005
+    // Testing new branch
     enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = ' ' };
 
 
