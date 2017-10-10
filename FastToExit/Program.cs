@@ -6,7 +6,6 @@ namespace FastToExit
 {
     enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', Key = 'k' };
 
-
     class Program
     {
         static void Main(string[] args)
