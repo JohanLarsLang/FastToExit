@@ -9,15 +9,16 @@ namespace FastToExit
 
         public Room()
         {
+            
             Sign = SquareType.Empty;
         }
 
-        public static new string Message(bool b)
+        public new static string Message(bool b)
         {
             return "";
         }
 
-        public new bool Visable()
+        public new bool Visible()
         {
             return true;
         }
