@@ -6,13 +6,24 @@ namespace FastToExit
 {
     public class Monster : Square
     {
-
-        public override char Print()
+        public Monster()
         {
-            return 'M';
+            Sign = SquareType.Monster;
         }
 
-        public new bool visable()
+        public static new string Message(bool b)
+        {
+            string message = "";
+
+            if (b == true)
+                message = "You killed the monster!";
+            else
+                message = "You need a sword to kill the monster!";
+
+            return message;
+        }
+
+        public new bool Visable()
         {
             return false;
         }
