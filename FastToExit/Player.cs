@@ -10,6 +10,8 @@ namespace FastToExit
         public int Ypos { get; set; }
 
         public static bool Sword { get; set; }
+        public static bool Rope { get; set; }
+        public static bool Cage { get; set; }
         public static bool DoorKey { get; set; }
         public static bool SuperKey { get; set; }
         public static bool Exit { get; set; }

@@ -1,10 +1,14 @@
 ﻿using System;
 
-//Lab 4 by Johan Lång och Anders Eriksson,  Göteborg 171010
+//Lab 4 by Johan Lång och Anders Eriksson,  Göteborg 171017
+
+// ***************** HIGH SCORE **************************
+
+//    ? Johan Lång, steps: 282, score: 1900
 
 namespace FastToExit
 {
-    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', SuperKey = 'k', Sword = 's' };
+    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', SuperKey = 'k', Sword = 's', Rope = 'r', Cage = 'c', Wolf = 'W' };
 
     class Program
     {
@@ -34,7 +38,7 @@ namespace FastToExit
                 for (int column = 0; column < COLUMNS; column++)
                 {
                     // Spelplan
-                    if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1 || row == 12 && column > 18 || row == 2 && column == 18)
+                    if (row == 0 || row == ROWS - 1 || column == 0 || column == COLUMNS - 1 || row == 12 && column > 18 || row == 2 && column == 16)
                         map[row, column] = new Wall();
 
                     else if (row == 3 && column == 13 || row == 8 && column == 13 || row == 1 && column == 19 || row == 13 && column == 22)
@@ -43,17 +47,26 @@ namespace FastToExit
                     else if (row == 4 && column == 7 || row == 10 && column == 2)
                         map[row, column] = new DoorKey();
 
+                    else if (row == 4 && column == 22)
+                        map[row, column] = new Cage();
+
+                    else if (row == 11 && column == 22)
+                        map[row, column] = new Sword();
+
                     else if (row == 14 && column == 22)
                         map[row, column] = new SuperKey();
 
                     else if (row == 1 && column == 20)
                         map[row, column] = new Exit();
 
-                    else if (row == 1 && column == 18 || row == 8 && column == 21 || row == 14 && column == 20)
+                    else if (row == 7 && column == 1)
+                        map[row, column] = new Rope();
+
+                    else if (row == 1 && column == 18 || row == 8 && column == 21 || row == 14 && column == 20 || row == 4 && column == 21 || row == 2 && column == 19)
                         map[row, column] = new Monster();
 
-                    else if (row == 8 && column == 22)
-                        map[row, column] = new Sword();
+                    else if (row == 8 && column == 22 || row == 1 && column == 17 || row == 11 && column == 21)
+                        map[row, column] = new Wolf();
 
                     else if (row == 3 && column >= 2 || row == 8 && column <= 20 || row == 12 && column >= 12)
                         map[row, column] = new Wall();
@@ -160,6 +173,24 @@ namespace FastToExit
                         Player.Steps++;
                     }
 
+                    else if (map[player.Xpos - 1, player.Ypos] is Rope)
+                    {
+                        message = Rope.Message(true);
+                        Player.Rope = true;
+                        player.Xpos--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos - 1, player.Ypos] is Cage)
+                    {
+                        message = Cage.Message(true);
+                        Player.Cage = true;
+                        player.Xpos--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
                     else if (map[player.Xpos - 1, player.Ypos] is Door)
                     {
                         if (Player.DoorKey == false)
@@ -195,6 +226,27 @@ namespace FastToExit
                             player.Xpos--;
                             Player.Steps++;
                             Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[player.Xpos - 1, player.Ypos] is Wolf)
+                    {
+                        if (Player.Cage == false || Player.Rope == false)
+                        {
+                            message = Wolf.Message(false);
+                            Player.Score -= 1000;
+                            if (Player.Score < 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = Wolf.Message(true);
+                            player.Xpos--;
+                            Player.Steps++;
+                            Player.Cage = false;
+                            Player.Rope = false;
                             Player.Score += 1000;
                         }
                     }
@@ -264,6 +316,24 @@ namespace FastToExit
                         Player.Steps++;
                     }
 
+                    else if (map[player.Xpos + 1, player.Ypos] is Cage)
+                    {
+                        message = Cage.Message(true);
+                        Player.Cage = true;
+                        player.Xpos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos + 1, player.Ypos] is Rope)
+                    {
+                        message = Rope.Message(true);
+                        Player.Rope = true;
+                        player.Xpos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
                     else if (map[player.Xpos + 1, player.Ypos] is Door)
                     {
                         if (Player.DoorKey == false)
@@ -299,6 +369,27 @@ namespace FastToExit
                             player.Xpos++;
                             Player.Steps++;
                             Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[player.Xpos + 1, player.Ypos] is Wolf)
+                    {
+                        if (Player.Cage == false || Player.Rope == false)
+                        {
+                            message = Wolf.Message(false);
+                            Player.Score -= 1000;
+                            if (Player.Score < 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = Wolf.Message(true);
+                            player.Xpos++;
+                            Player.Steps++;
+                            Player.Cage = false;
+                            Player.Rope = false;
                             Player.Score += 1000;
                         }
                     }
@@ -370,6 +461,15 @@ namespace FastToExit
                         Player.Steps++;
                     }
 
+                    else if (map[player.Xpos, player.Ypos - 1] is Rope)
+                    {
+                        message = Rope.Message(true);
+                        Player.Rope = true;
+                        player.Ypos--;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
                     else if (map[player.Xpos, player.Ypos - 1] is Door)
                     {
                         if (Player.DoorKey == false)
@@ -402,6 +502,26 @@ namespace FastToExit
                         else
                         {
                             message = Monster.Message(true);
+                            player.Ypos--;
+                            Player.Steps++;
+                            Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[player.Xpos, player.Ypos - 1] is Wolf)
+                    {
+                        if (Player.Cage == false || Player.Rope == false)
+                        {
+                            message = Wolf.Message(false);
+                            Player.Score -= 1000;
+                            if (Player.Score < 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = Wolf.Message(true);
                             player.Ypos--;
                             Player.Steps++;
                             Player.Sword = false;
@@ -474,6 +594,24 @@ namespace FastToExit
                         Player.Steps++;
                     }
 
+                    else if (map[player.Xpos, player.Ypos + 1] is Rope)
+                    {
+                        message = Rope.Message(true);
+                        Player.Rope = true;
+                        player.Ypos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
+                    else if (map[player.Xpos, player.Ypos + 1] is Cage)
+                    {
+                        message = Cage.Message(true);
+                        Player.Cage = true;
+                        player.Ypos++;
+                        Player.Score += 1000;
+                        Player.Steps++;
+                    }
+
                     else if (map[player.Xpos, player.Ypos + 1] is Door)
                     {
                         if (Player.DoorKey == false)
@@ -509,6 +647,27 @@ namespace FastToExit
                             player.Ypos++;
                             Player.Steps++;
                             Player.Sword = false;
+                            Player.Score += 1000;
+                        }
+                    }
+
+                    else if (map[player.Xpos, player.Ypos + 1] is Wolf)
+                    {
+                        if (Player.Cage == false || Player.Rope == false)
+                        {
+                            message = Wolf.Message(false);
+                            Player.Score -= 1000;
+                            if (Player.Score < 0)
+                                Player.Score = 0;
+                        }
+
+                        else
+                        {
+                            message = Wolf.Message(true);
+                            player.Ypos++;
+                            Player.Steps++;
+                            Player.Cage = false;
+                            Player.Rope = false;
                             Player.Score += 1000;
                         }
                     }
