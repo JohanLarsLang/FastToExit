@@ -5,10 +5,11 @@
 // ***************** HIGH SCORE **************************
 
 //    ? Johan Lång, steps: 282, score: 1900
+//      Anders Eriksson, steps: 202, score: 1900
 
 namespace FastToExit
 {
-    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', SuperKey = 'k', Sword = 's', Rope = 'r', Cage = 'c', Wolf = 'W' };
+    public enum SquareType { Player = '@', Monster = 'M', Exit = 'E', Empty = '-', Wall = '#', Door = 'D', DoorKey = 'k', SuperKey = 'K', Sword = 's', Rope = 'r', Cage = 'c', Wolf = 'W' };
 
     class Program
     {
@@ -744,7 +745,7 @@ namespace FastToExit
                     else
                     {
                         message = "";
-                        messageE = "You need to success to go to Exit before play again";
+                        messageE = "You need to succeed to go to Exit before you play again";
 
                     }
                 }
