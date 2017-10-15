@@ -30,8 +30,6 @@ namespace FastToExit
             Player.Steps = 0;
             Player.Score = 10000;
             string message = "";
-            string messageE = "";
-            string command = "";
             Player.Exit = false;
 
             for (int row = 0; row < ROWS; row++)
@@ -82,13 +80,13 @@ namespace FastToExit
             #endregion
 
             #region Rita kartan
-            //Rita ut kartan
+
             while (true)
             {
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.Clear();
-                Console.WriteLine($"The Fast To Exit Game");
+                Console.WriteLine($"** The Fast To Exit Game **\n");
 
                 string buffer = "";
 
@@ -119,8 +117,7 @@ namespace FastToExit
 
 
                 Console.Write(buffer);
-                // Console.WriteLine();
-                Console.WriteLine("Use these keys to navigate:");
+                Console.WriteLine("\nUse these keys to navigate:");
                 Console.WriteLine();
                 Console.WriteLine($"\tw - Up");
                 Console.WriteLine("a - Left\td - Right");
@@ -129,17 +126,55 @@ namespace FastToExit
 
                 Console.WriteLine($"Position(Row, Column): {player.Xpos}, {player.Ypos}");
 
-                Console.WriteLine($"Steps: {Player.Steps}, Key: {Player.DoorKey}, , SuperKey: {Player.SuperKey}, Sword: {Player.Sword}, Score: {Player.Score}");
+                Console.WriteLine($"Steps: {Player.Steps}, Score: {Player.Score}\n");
+                Console.WriteLine("Inventory:");
+                Console.WriteLine($"Key: {Player.DoorKey}, , SuperKey: {Player.SuperKey}, Sword: {Player.Sword}, Cage: {Player.Cage}, Rope: {Player.Rope}\n");
                 Console.WriteLine($"Message: {message}");
-                Console.WriteLine($"Message: {messageE}");
-                Console.Write($"Command: {command}");
+
+                //Right side of the Map
+                Console.SetCursorPosition(30, 3);
+                Console.WriteLine("Enter the Exit with so less staps");
+                Console.SetCursorPosition(30, 4);
+                Console.WriteLine("and with so high score as possible");
+                Console.SetCursorPosition(30, 6);
+                Console.WriteLine("c = Cage");
+                Console.SetCursorPosition(30, 7);
+                Console.WriteLine("D = Doors");
+                Console.SetCursorPosition(30, 8);
+                Console.WriteLine("E = Exit");
+                Console.SetCursorPosition(30, 9);
+                Console.WriteLine("k = Door Keys");
+                Console.SetCursorPosition(30, 10);
+                Console.WriteLine("K = Super Key");
+                Console.SetCursorPosition(30, 11);
+                Console.WriteLine("M = Monster");
+                Console.SetCursorPosition(30, 12);
+                Console.WriteLine("r = Rope");
+                Console.SetCursorPosition(30, 13);
+                Console.WriteLine("s = Sword");
+                Console.SetCursorPosition(30, 14);
+                Console.WriteLine("# = Walls");
+                Console.SetCursorPosition(30, 15);
+                Console.WriteLine("W = Wolf");
+
+                Console.SetCursorPosition(8, 34);
+
+                Console.CursorVisible = false;
+                Console.SetWindowPosition(0, 0);
+                Console.WindowHeight = 37;
+                Console.WindowWidth = 75;
+                Console.BufferHeight = 37;
+                Console.BufferWidth = 75;
+
+                //Console.CursorLeft = 0;
+                //Console.CursorTop = 0;
 
                 #endregion
 
                 var key = Console.ReadKey();
 
                 #region uppåt
-                //Uppåt
+
                 if (key.Key == ConsoleKey.W)
                 {
                     message = "";
@@ -263,8 +298,7 @@ namespace FastToExit
                         {
                             player.Xpos--;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
-                            messageE = "Type: q  to quit or type: p  to play again";
+                            message = $"{Exit.Message(true)}\nYou got: { Player.Steps} steps and {Player.Score} points!\nType: q  to quit or type: p  to play again!";
                             Player.Exit = true;
                             Player.SuperKey = false;
                         }
@@ -282,7 +316,7 @@ namespace FastToExit
                 #endregion
 
                 #region Nedåt
-                //Nedåt
+
                 if (key.Key == ConsoleKey.S)
                 {
                     message = "";
@@ -406,10 +440,9 @@ namespace FastToExit
                         {
                             player.Xpos++;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            message = $"{Exit.Message(true)}\nYou got: { Player.Steps} steps and {Player.Score} points!\nType: q  to quit or type: p  to play again!";
                             Player.SuperKey = false;
                             Player.Exit = true;
-                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -427,7 +460,6 @@ namespace FastToExit
 
                 #region vänster
 
-                // Vänster
                 else if (key.Key == ConsoleKey.A)
                 {
                     message = "";
@@ -541,10 +573,9 @@ namespace FastToExit
                         {
                             player.Ypos--;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            message = $"{Exit.Message(true)}\nYou got: { Player.Steps} steps and {Player.Score} points!\nType: q  to quit or type: p  to play again!";
                             Player.SuperKey = false;
                             Player.Exit = true;
-                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -560,7 +591,7 @@ namespace FastToExit
                 #endregion
 
                 #region Höger
-                // Höger
+
                 else if (key.Key == ConsoleKey.D)
                 {
                     message = "";
@@ -684,10 +715,9 @@ namespace FastToExit
                         {
                             player.Ypos++;
                             Player.Steps++;
-                            message = $"{Exit.Message(true)} You got: { Player.Steps} steps and {Player.Score} points!";
+                            message = $"{Exit.Message(true)}\nYou got: { Player.Steps} steps and {Player.Score} points!\nType: q  to quit or type: p  to play again!";
                             Player.SuperKey = false;
                             Player.Exit = true;
-                            messageE = "Type: q  to quit or type: p  to play again";
                         }
                     }
 
@@ -710,11 +740,11 @@ namespace FastToExit
                     Console.WriteLine("Welcome to play again! \n Thank you! \n");
                     Console.WriteLine();
                     Console.WriteLine("Are you sure you want to quit the game?");
-                    Console.Write("Select Y or y to quit the game or any key to continue: ");
+                    Console.Write("Select Y or J to quit the game or any key to continue: ");
 
                     string quitSelection = Console.ReadLine();
-
-                    if (quitSelection == "Y" || quitSelection == "y")
+                    quitSelection = quitSelection.ToLower();
+                    if (quitSelection == "j" || quitSelection == "y")
                         return;
 
                     else
@@ -733,8 +763,6 @@ namespace FastToExit
                     {
                         Console.Clear();
                         message = "";
-                        messageE = "";
-                        command = "";
                         Player.Score = 0;
                         Player.Steps = 0;
 
@@ -744,9 +772,7 @@ namespace FastToExit
                     }
                     else
                     {
-                        message = "";
-                        messageE = "You need to succeed to go to Exit before you play again";
-
+                        message = "You need to succeed to go to Exit before you play again";
                     }
                 }
             }
