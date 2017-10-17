@@ -4,8 +4,9 @@
 
 // ***************** HIGH SCORE **************************
 
-//    ? Johan Lång, steps: 282, score: 1900
-//      Anders Eriksson, steps: 202, score: 1900
+//    Johan Svensson, steps: 162, score: 2700
+//    Samuel,         steps: 158, score: 1900
+//    Tommy,          steps: 400, score: 1700
 
 namespace FastToExit
 {
@@ -133,9 +134,9 @@ namespace FastToExit
 
                 //Right side of the Map
                 Console.SetCursorPosition(30, 3);
-                Console.WriteLine("Enter the Exit with so less staps");
+                Console.WriteLine("Enter the Exit with as few steps");
                 Console.SetCursorPosition(30, 4);
-                Console.WriteLine("and with so high score as possible");
+                Console.WriteLine("and with highest score possible");
                 Console.SetCursorPosition(30, 6);
                 Console.WriteLine("c = Cage");
                 Console.SetCursorPosition(30, 7);
@@ -156,6 +157,9 @@ namespace FastToExit
                 Console.WriteLine("# = Walls");
                 Console.SetCursorPosition(30, 15);
                 Console.WriteLine("W = Wolf");
+
+                Console.SetCursorPosition(30, 17);
+                Console.WriteLine("@ = Player");
 
                 Console.SetCursorPosition(8, 34);
 
